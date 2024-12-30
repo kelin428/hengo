@@ -1,16 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"hengo"
-	"net/http"
 )
+
+type Name struct {
+	Id string `json:"id"`
+}
 
 func main() {
 	hen := hengo.New()
-	hen.Get("/hello", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello World")
+	hen.Get("/hello", func(c *hengo.Context) {
+		var name Name
+		c.BindJSON(&name)
+		//c.JsonResponse(hengo.StatusOK, "Hello World", hengo.H{
+		//	"name":    "Hen",
+		//	"version": "0.1",
+		//})
+		c.JsonErrorResponse(hengo.StatusBadRequest, "Hello World")
 	})
 
-	hen.Run()
+	hen.Run(":8080")
 }
